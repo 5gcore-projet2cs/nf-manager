@@ -74,7 +74,7 @@ if [ "$ACTION" = "out" ]; then
   tc qdisc del dev "$IFACE" root 2>/dev/null || true
 
   echo "Applying $DELAY ms delay to outgoing traffic on $IFACE"
-  tc qdisc add dev "$IFACE" root netem delay "${DELAY}ms"
+  tc qdisc add dev "$IFACE" root netem delay "${DELAY}ms" 10ms distribution normal
   exit 0
 fi
 
@@ -106,7 +106,7 @@ if [ "$ACTION" = "in" ]; then
   tc filter add dev "$IFACE" parent ffff: protocol ip u32 match u32 0 0 action mirred egress redirect dev "$IFB"
 
   echo "Applying $DELAY ms delay to incoming traffic on $IFACE via $IFB"
-  tc qdisc add dev "$IFB" root netem delay "${DELAY}ms"
+  tc qdisc add dev "$IFB" root netem delay "${DELAY}ms" 10ms distribution normal
   exit 0
 fi
 
